@@ -18,6 +18,7 @@ Each notebook represents a different version or approach to sentiment analysis, 
 [FinViz (Financial Visualizations)](https://finviz.com/) is used as the primary news data source for this project.
 
 ### Why FinViz?
+
 - Provides **live (real-time) news headlines** for individual stocks and the broader market
 - Provides access to **historical news** headlines tied to specific ticker symbols
 - News is aggregated from multiple financial media sources (Reuters, Bloomberg, MarketWatch, etc.)
@@ -46,13 +47,16 @@ def get_finviz_news(ticker):
     headers = {'User-Agent': 'Mozilla/5.0'}
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'html.parser')
+    
     news_table = soup.find(id='news-table')
     rows = news_table.findAll('tr')
+    
     parsed = []
     for row in rows:
         title = row.a.text
         date_data = row.td.text.split()
         parsed.append([date_data, title])
+    
     return pd.DataFrame(parsed, columns=['Date', 'Headline'])
 ```
 
@@ -62,12 +66,13 @@ def get_finviz_news(ticker):
 
 | Version | Notebook | Description |
 |---------|----------|-------------|
-| v1 | `sentiment_v1_vader.ipynb` | Basic sentiment scoring using VADER (NLTK) on FinViz headlines |
-| v2 | `sentiment_v2_textblob.ipynb` | Sentiment analysis using TextBlob polarity & subjectivity |
-| v3 | `sentiment_v3_transformers.ipynb` | Deep learning approach using HuggingFace FinBERT model |
-| v4 | `sentiment_v4_visualization.ipynb` | Aggregated sentiment scores with chart visualizations |
+| v1 | `sentiment_analysis_v1.ipynb` | Basic sentiment analysis using **TextBlob** with polarity scoring on FinViz news headlines |
+| v2 | `sentiment_analysis_v2-03-02-2026.ipynb` | Enhanced version using **TextBlob** with polarity & subjectivity analysis on FinViz data |
+| v3 | *(not uploaded)* | Originally planned for transformers-based approach but skipped due to dependency issues |
+| v4 | `sentiment_analysis_alphavantage_v4-04-01-2026.ipynb` | Alternative approach using **Alpha Vantage API** for news data with sentiment scoring |
+| v5 | `sentiment_analysis_v5-04-01-2026.ipynb` | Advanced sentiment analysis using **VADER (NLTK)** on FinViz headlines with compound scoring |
 
-> More versions will be added over time.
+> More versions may be added over time as methodologies and models evolve.
 
 ---
 
@@ -75,23 +80,23 @@ def get_finviz_news(ticker):
 
 ```
 FinViz Website
-    |
-    |-- Live News (real-time headlines per ticker)
-    |-- Historical News (past headlines per ticker)
-    |
-    v
+  |
+  |-- Live News (real-time headlines per ticker)
+  |-- Historical News (past headlines per ticker)
+  |
+  v
 Data Scraping (Python: requests / finvizfinance)
-    |
-    v
+  |
+  v
 Data Cleaning & Preprocessing
-    |
-    v
+  |
+  v
 Sentiment Analysis (VADER / TextBlob / FinBERT)
-    |
-    v
+  |
+  v
 Scoring & Labeling (Positive / Negative / Neutral)
-    |
-    v
+  |
+  v
 Visualization & Insights (Matplotlib / Plotly)
 ```
 
@@ -100,33 +105,50 @@ Visualization & Insights (Matplotlib / Plotly)
 ## Requirements
 
 ```bash
-pip install requests beautifulsoup4 pandas nltk textblob transformers finvizfinance matplotlib plotly
+pip install requests beautifulsoup4 pandas nltk textblob transformers finvizfinance matplotlib plotly alpha-vantage
 ```
 
 ---
 
-## Libraries Used
+## Usage
 
-- `requests` & `BeautifulSoup4` - Web scraping FinViz news
-- `finvizfinance` - Python wrapper for FinViz data
-- `NLTK / VADER` - Rule-based sentiment analysis
-- `TextBlob` - Simple NLP sentiment scoring
-- `HuggingFace Transformers (FinBERT)` - Finance-domain BERT model
-- `Pandas` - Data manipulation
-- `Matplotlib / Plotly` - Visualization
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/tradevectorsrobots/sentiment-analysis-notebooks.git
+   cd sentiment-analysis-notebooks
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Open any notebook version:
+   ```bash
+   jupyter notebook sentiment_analysis_v1.ipynb
+   ```
+
+4. Run the cells and analyze sentiment results!
 
 ---
 
-## Notes
+## Contributing
 
-- FinViz free tier is used for scraping; please respect their [Terms of Service](https://finviz.com/terms-of-service.ashx) and add appropriate delays between requests.
-- For high-frequency or bulk historical data, consider using FinViz Elite API.
-- Notebooks are independent and can be run separately.
+Contributions are welcome! Feel free to:
+- Submit issues for bugs or feature requests
+- Create pull requests with improvements
+- Share feedback on model accuracy and performance
 
 ---
 
-## Author
+## License
 
-**Trade Vectors LLP** | Mumbai, India
-Algorithmic Trading | Financial Research | NLP & AI Applications
-GitHub: [@tradevectorsrobots](https://github.com/tradevectorsrobots)
+MIT License - feel free to use and modify for your projects.
+
+---
+
+## Contact
+
+Developed by [Trade Vectors LLP](https://github.com/tradevectorsrobots)
+
+For questions or collaboration opportunities, please open an issue or contact us through GitHub.
